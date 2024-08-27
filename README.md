@@ -1,7 +1,7 @@
 # monitor-application-logs-using-grafana-loki-&-promtailagent
 ```python
 ## Flow of Logs <----->
- The Logs that are generated inside nginx access.log are first synced inside promtail-sidecar container and the promtail container then pushes the logs to loki.
+ The Logs that are generated inside main pod synced with promtail-sidecar container, the promtail container then pushes the logs to loki.
  After this the loki url has been used as a datasource in grafana dashboard which help to easy monitor the logs .
 ```
 $$
@@ -23,6 +23,7 @@ minikube start
 ```python
 cd monitor-logs-using-grafana-loki-and-promtailagent-k8s 
 ```
+#### Create nginx & monitoring namespace
 ```python
 kubectl create ns nginx           
 namespace/nginx created
@@ -35,7 +36,7 @@ namespace/monitoring created
 ```python
 cd loki
 ```
-#### If you want your logs to be persistent, configure Loki to use AWS s3 bucket as a storage
+#### If you want your logs to be persistent, configure Loki to use AWS s3 bucket as a storage else leave it as it is,
 #### Search for bucketnames in values.yaml file & configure the following,
 ````python
     bucketnames: <bucket1>
@@ -102,7 +103,7 @@ Forwarding from [::1]:3000 -> 3000
 
 
 
-### Lets apply nginx deployment and promtail as a sidecar container
+### Lets deploy nginx deployment and promtail as a sidecar container in minikube cluster
 *Sidecar containers are the secondary containers that run along with the main application container within the same Pod.*
 #### Run the following cmd to apply nginx deployment along with promtail-sidecar container,
 ```python
