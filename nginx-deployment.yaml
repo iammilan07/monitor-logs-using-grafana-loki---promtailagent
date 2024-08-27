@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx
+          ports:
+            - name: http
+              containerPort: 80
+
+          volumeMounts:
+            - name: nginx-logs
+              mountPath: /var/etc/nginx/
+        # Promtail sidecar container
+        - name: promtail-sidecar
+          image: grafana/promtail:latest
+          args:
+            - "-config.file=/etc/promtail/promtail.yaml"
+          volumeMounts:
+            - name: config
+              mountPath: /etc/promtail
+            - name: nginx-logs
+              mountPath: /var/log/nginx-logs
+      volumes:
+        #  volume for the nginx logs
+        - name: nginx-logs
+          emptyDir: {}
+        #  volume for the Promtail config
+        - name: config
+          configMap:
+            name: nginx-promtail-config
