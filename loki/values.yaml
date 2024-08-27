@@ -100,7 +100,7 @@ config:
     
     aws:
       bucketnames: <bucket1>
-      region: ap-south-1
+      region: <region>
       access_key_id: 
       secret_access_key: 
 
