@@ -50,13 +50,7 @@ spec:
             requests:
               cpu: 250m
               memory: 750Mi
-          volumeMounts:
-            - mountPath: /var/lib/grafana
-              name: grafana-storage
-      volumes:
-        - name: grafana-storage
-          persistentVolumeClaim:
-            claimName: grafana-pvc
+
 ---
 apiVersion: v1
 kind: Service

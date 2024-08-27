@@ -15,14 +15,14 @@ spec:
     spec:
       containers:
         - name: nginx-container
-          image: nginx
+          image: nginx:1.27.1-alpine
           ports:
             - name: http
               containerPort: 80
 
           volumeMounts:
             - name: nginx-logs
-              mountPath: /var/etc/nginx/
+              mountPath: /var/log/nginx/
         # Promtail sidecar container
         - name: promtail-sidecar
           image: grafana/promtail:latest
@@ -41,3 +41,17 @@ spec:
         - name: config
           configMap:
             name: nginx-promtail-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+  namespace: nginx
+spec:
+  selector:
+    app: nginx
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
